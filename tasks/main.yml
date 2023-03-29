@@ -1,0 +1,117 @@
+---
+- name: 'Ensure dependencies'
+  ansible.builtin.package:
+    name:
+      - 'git'
+      - 'ansible-core'
+
+- name: 'Ensure Semaphore package file'
+  when: semaphore_package_download
+  block:
+    - name: 'Get Semaphore versionversion (1/2)'
+      ansible.builtin.uri:
+        url: 'https://api.github.com/repos/ansible-semaphore/semaphore/releases/latest'
+        return_content: true
+      register: 'semaphore_version_github'
+      become: false
+
+    - name: "Get Semaphore version (2/2)"
+      ansible.builtin.set_fact:
+        semaphore_version: "{{ semaphore_version_github['json']['tag_name'][1:] }}"
+        semaphore_pkg_extension: "{{ (ansible_facts['os_family'] == 'RedHat') | ternary('rpm', 'deb') }}"
+        semaphore_pkg_arch: "{{ (ansible_facts['architecture'] == 'x86_64') | ternary('amd64', 'arm64') }}"
+
+    - name: 'Ensure Semaphore package file'
+      ansible.builtin.get_url:
+        url: "https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_{{ semaphore_pkg_arch }}.{{ semaphore_pkg_extension }}"
+        dest: "/tmp/semaphore.{{ semaphore_pkg_extension }}"
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
+      become: false
+
+- name: 'Ensure Semaphore installed (RedHat-like)'
+  ansible.builtin.dnf:
+    name: "{{ (semaphore_package_download) | ternary('file:///tmp/semaphore.' + semaphore_pkg_extension, 'semaphore') }}"
+    disable_gpg_check: true
+    state: 'present'
+  when: ansible_facts['os_family'] == 'RedHat'
+
+- name: 'Ensure Semaphore installed (Debian-like)'
+  ansible.builtin.apt:
+    name: "{{ (semaphore_package_download) | ternary('file:///tmp/semaphore.' + semaphore_pkg_extension, 'semaphore') }}"
+    allow_unauthenticated: true
+    state: 'present'
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: 'Ensure serviceaccount'
+  ansible.builtin.user:
+    name: 'semaphore'
+    comment: 'Ansible Semaphore'
+    system: true
+    password: '!'
+    home: '/var/lib/semaphore'
+
+- name: 'Ensure Semaphore dirs'
+  ansible.builtin.file:
+    path: "{{ semaphore_dir }}"
+    state: 'directory'
+    owner: 'semaphore'
+    group: 'semaphore'
+    mode: '0750'
+  loop:
+    - '/etc/semaphore'
+    - '/var/lib/semaphore/tmp'
+  loop_control:
+    loop_var: 'semaphore_dir'
+
+- name: 'Ensure Semaphore config file'
+  ansible.builtin.template:
+    src: 'semaphore.conf.j2'
+    dest: '/etc/semaphore/semaphore.conf'
+    owner: 'semaphore'
+    group: 'semaphore'
+    mode: '0660'
+  no_log: "{{ not semaphore_debug }}"
+  notify: 'restart semaphore'
+
+- name: 'Ensure SystemD service file'
+  ansible.builtin.copy:
+    src: 'semaphore.service'
+    dest: '/etc/systemd/system/semaphore.service'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+
+- name: 'Ensure service'
+  ansible.builtin.systemd:
+    name: 'semaphore'
+    state: 'started'
+    enabled: true
+    daemon_reload: true
+
+- name: 'Ensure Semaphore local admin user'
+  when: semaphore_admin_user_manage
+  block:
+    - name: 'Update Semaphore local admin account'
+      ansible.builtin.command: >
+        /usr/bin/semaphore user change-by-login
+        --config /etc/semaphore/semaphore.conf
+        --login {{ semaphore_admin_user }}
+        --password {{ semaphore_admin_pass }}
+        --email {{ semaphore_admin_email }}
+        --admin
+      changed_when: true  # This always changes, this CLI basically resets the password
+      no_log: "{{ not semaphore_debug }}"
+  rescue:
+    - name: 'Create Semaphore local admin account'
+      ansible.builtin.command: >
+        /usr/bin/semaphore user add
+        --config /etc/semaphore/semaphore.conf
+        --login {{ semaphore_admin_user }}
+        --name {{ semaphore_admin_user }}
+        --password {{ semaphore_admin_pass }}
+        --email {{ semaphore_admin_email }}
+        --admin
+      changed_when: true  # This always changes, this CLI basically resets the password
+      no_log: "{{ not semaphore_debug }}"

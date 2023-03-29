@@ -1,0 +1,56 @@
+---
+semaphore_package_download: true  # Disable if you have no access to Github and provide the
+                                  # Semaphore package via an internal repo
+
+semaphore_debug: false
+# Database settings
+# This key is used to encrypt database variables
+# Generate one with "head -c32 /dev/urandom | base64"
+# DO NOT USE THIS EXAMPLE VALUE!
+semaphore_access_key_encryption: 'fJRW2SjYLl1WHRv2lrKguOlFcD1cb5pLuRYamULawg0='
+
+semaphore_db_flavor: 'bolt'       # bolt, postgres or mysql
+semaphore_bolt_db: '/var/lib/semaphore/semaphore.bolt'
+semaphore_db_host: 'localhost'
+semaphore_db_name: 'semaphore'
+semaphore_db_user: 'semaphore'
+semaphore_db_pass: 'secure_password'
+
+# Local admin user
+# Keep local admin user up to date (create the user and update the password)
+semaphore_admin_user_manage: true
+semaphore_admin_user: 'admin'
+semaphore_admin_pass: 'ansible-webui'
+semaphore_admin_email: 'root@localhost'
+
+# WebUI settings
+semaphore_service_uri: 'http://semaphore.example.com'
+semaphore_port: 3000
+# This key is used to encrypt and hash cookies
+# Generate one with "head -c32 /dev/urandom | base64"
+# DO NOT USE THESE EXAMPLE VALUES!
+semaphore_cookie_encryption: 'PQwYDTtxqv+l7qNjwKieeF3V+HzTKn5SfnWGGYDrifo='
+semaphore_cookie_hash: 'BzkGM8e4Cr+oe7/VR2iseyEI94pRL7IkmU8GJfBG8nM='
+
+semaphore_concurrency_mode: ''    # empty, 'node' or 'project'
+semaphore_max_parallel_tasks: 0
+
+# Email settings
+semaphore_email_enabled: false
+semaphore_email_from: 'semaphore@exmaple.com'
+semaphore_email_host: 'localhost'
+semaphore_email_port: 25
+
+# LDAP settings
+semaphore_ldap_enabled: false
+semaphore_ldap_binddn: 'dn=readonly,dc=example,dc=com'
+semaphore_ldap_host: 'localhost'
+semaphore_ldap_tls: false
+semaphore_ldap_password: 'ldap_password_secure_n_all'
+semaphore_ldap_search: 'ou=users'
+semaphore_ldap_searchfilter: ''
+
+# Telegram settings
+semaphore_telegram_enabled: false
+semaphore_telegram_chat: 'semaphore-alerts'
+semaphore_telegram_token: ''

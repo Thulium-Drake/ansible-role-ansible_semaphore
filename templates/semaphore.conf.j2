@@ -1,0 +1,43 @@
+{
+  "bolt": {
+    "host": "{{ semaphore_bolt_db }}"
+  },
+  "mysql": {
+    "host": "{{ semaphore_db_host }}",
+    "user": "{{ semaphore_db_user }}",
+    "pass": "{{ semaphore_db_pass }}",
+    "name": "{{ semaphore_db_name }}",
+    "options": {}
+  },
+  "postgres": {
+    "host": "{{ semaphore_db_host }}",
+    "user": "{{ semaphore_db_user }}",
+    "pass": "{{ semaphore_db_pass }}",
+    "name": "{{ semaphore_db_name }}",
+    "options": {}
+  },
+  "dialect": "{{ semaphore_db_flavor }}",
+  "port": "{{ semaphore_port }}",
+  "interface": "",
+  "tmp_path": "/var/lib/semaphore/tmp",
+  "cookie_hash": "{{ semaphore_cookie_hash }}",
+  "cookie_encryption": "{{ semaphore_cookie_encryption }}",
+  "access_key_encryption": "{{ semaphore_access_key_encryption }}",
+  "email_alert": {{ semaphore_email_enabled | lower }},
+  "email_sender": "{{ semaphore_email_from }}",
+  "email_host": "{{ semaphore_email_host }}",
+  "email_port": "{{ semaphore_email_port }}",
+  "web_host": "{{ semaphore_service_uri }}",
+  "ldap_enable": {{ semaphore_ldap_enabled | lower }},
+  "ldap_needtls": {{ semaphore_ldap_tls | lower }},
+  "ldap_binddn": "{{ semaphore_ldap_binddn }}",
+  "ldap_bindpassword": "{{ semaphore_ldap_password }}",
+  "ldap_server": "{{ semaphore_ldap_host }}",
+  "ldap_searchdn": "{{ semaphore_ldap_search }}",
+  "ldap_searchfilter": "{{ semaphore_ldap_searchfilter }}",
+  "concurrency_mode": "{{ semaphore_concurrency_mode }}",
+  "max_parallel_tasks": {{ semaphore_max_parallel_tasks }},
+  "telegram_alert": {{ semaphore_telegram_enabled | lower }},
+  "telegram_chat": "{{ semaphore_telegram_chat }}",
+  "telegram_token": "{{ semaphore_telegram_token }}"
+}
