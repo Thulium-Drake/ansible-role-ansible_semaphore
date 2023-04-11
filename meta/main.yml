@@ -3,7 +3,7 @@ galaxy_info:
   author: thulium_drake
   description: Ansible Semaphore
   company:
-  role_name: semaphore
+  role_name: ansible_semaphore
 
   license: GPLv3
 
