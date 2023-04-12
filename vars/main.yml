@@ -1,0 +1,3 @@
+---
+# This needs to be defined only, the role will autodetect which one to use when needed
+semaphore_pkg_extension: ''
