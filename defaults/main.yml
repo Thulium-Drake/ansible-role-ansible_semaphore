@@ -2,6 +2,7 @@
 semaphore_package_download: true  # Disable if you have no access to Github and provide the
                                   # Semaphore package via an internal repo
 
+semaphore_ansible_package: 'ansible-core'
 semaphore_debug: false
 # Database settings
 # This key is used to encrypt database variables

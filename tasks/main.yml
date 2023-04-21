@@ -3,7 +3,7 @@
   ansible.builtin.package:
     name:
       - 'git'
-      - 'ansible-core'
+      - "{{ semaphore_ansible_package }}"
 
 - name: 'Ensure Semaphore package file'
   when: semaphore_package_download
