@@ -37,12 +37,23 @@
     state: 'present'
   when: ansible_facts['os_family'] == 'RedHat'
 
-- name: 'Ensure Semaphore installed (Debian-like)'
+- name: 'Ensure Semaphore installed (Debian-like from repo)'
   ansible.builtin.apt:
-    name: "{{ (semaphore_package_download) | ternary('file:///tmp/semaphore.' + semaphore_pkg_extension, 'semaphore') }}"
+    name: 'semaphore'
     allow_unauthenticated: true
     state: 'present'
-  when: ansible_facts['os_family'] == 'Debian'
+  when:
+    - ansible_facts['os_family'] == 'Debian'
+    - not semaphore_package_download
+
+- name: 'Ensure Semaphore installed (Debian-like from file)'
+  ansible.builtin.apt:
+    deb: "file:///tmp/semaphore.{{ semaphore_pkg_extension }}"
+    allow_unauthenticated: true
+    state: 'present'
+  when:
+    - ansible_facts['os_family'] == 'Debian'
+    - semaphore_package_download
 
 - name: 'Ensure serviceaccount'
   ansible.builtin.user:
