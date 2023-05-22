@@ -1,5 +1,5 @@
 ---
-- name: 'restart semaphore'
+- name: 'Restart semaphore'
   ansible.builtin.service:
     name: 'semaphore'
     state: 'restarted'

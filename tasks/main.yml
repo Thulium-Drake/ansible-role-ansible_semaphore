@@ -21,7 +21,7 @@
         semaphore_pkg_extension: "{{ (ansible_facts['os_family'] == 'RedHat') | ternary('rpm', 'deb') }}"
         semaphore_pkg_arch: "{{ (ansible_facts['architecture'] == 'x86_64') | ternary('amd64', 'arm64') }}"
 
-    - name: 'Ensure Semaphore package file'
+    - name: 'Ensure Semaphore package file'  # yamllint disable rule:line-length
       ansible.builtin.get_url:
         url: "https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_{{ semaphore_pkg_arch }}.{{ semaphore_pkg_extension }}"
         dest: "/tmp/semaphore.{{ semaphore_pkg_extension }}"
@@ -84,7 +84,7 @@
     group: 'semaphore'
     mode: '0660'
   no_log: "{{ not semaphore_debug }}"
-  notify: 'restart semaphore'
+  notify: 'Restart semaphore'
 
 - name: 'Ensure SystemD service file'
   ansible.builtin.copy:
