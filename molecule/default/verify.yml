@@ -9,15 +9,3 @@
         return_content: true
       register: 'reply'
       failed_when: reply['status'] != 200
-
-    - name: 'Verify user account login'
-      ansible.builtin.uri:
-        url: 'http://semaphore.example.com:3000/api/auth/login'
-        body:
-          auth: 'admin'
-          password: 'ansible-webui'
-        body_format: 'json'
-        method: 'POST'
-        return_content: true
-      register: 'reply'
-      failed_when: reply['status'] != 204

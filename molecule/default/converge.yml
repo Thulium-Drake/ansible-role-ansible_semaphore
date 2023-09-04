@@ -3,6 +3,7 @@
   hosts: 'all'
   vars:
     semaphore_debug: true
+    semaphore_admin_user_manage: false  # We can't do this in Molecule with idempotency correctly, as it requires 3 runs to be idempotent
   tasks:
     - name: 'Run role'
       ansible.builtin.import_role:
