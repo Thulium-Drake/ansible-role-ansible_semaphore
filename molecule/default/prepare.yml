@@ -11,3 +11,12 @@
       ansible.builtin.yum:
         update_cache: true
       when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: 'Ensure hosts entry'
+      ansible.builtin.lineinfile:
+        line: '127.0.0.1 semaphore.example.com'
+        path: '/etc/hosts'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
+        unsafe_writes: true

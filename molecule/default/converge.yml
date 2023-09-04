@@ -1,6 +1,8 @@
 ---
 - name: 'Converge'
   hosts: 'all'
+  vars:
+    semaphore_debug: true
   tasks:
     - name: 'Run role'
       ansible.builtin.import_role:
