@@ -11,7 +11,7 @@
   block:
     - name: 'Get Semaphore versionversion (1/2)'
       ansible.builtin.uri:
-        url: 'https://api.github.com/repos/ansible-semaphore/semaphore/releases/latest'
+        url: 'https://api.github.com/repos/semaphoreui/semaphore/releases/latest'
         return_content: true
       register: 'semaphore_version_github'
       become: false
@@ -24,7 +24,7 @@
 
     - name: 'Ensure Semaphore package file'  # yamllint disable rule:line-length
       ansible.builtin.get_url:
-        url: "https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_{{ semaphore_pkg_arch }}.{{ semaphore_pkg_extension }}"
+        url: "https://github.com/semaphoreui/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_{{ semaphore_pkg_arch }}.{{ semaphore_pkg_extension }}"
         dest: "/tmp/semaphore.{{ semaphore_pkg_extension }}"
         owner: 'root'
         group: 'root'
