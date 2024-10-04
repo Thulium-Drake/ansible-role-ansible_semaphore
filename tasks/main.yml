@@ -26,8 +26,6 @@
       ansible.builtin.get_url:
         url: "https://github.com/semaphoreui/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_{{ semaphore_pkg_arch }}.{{ semaphore_pkg_extension }}"
         dest: "/tmp/semaphore.{{ semaphore_pkg_extension }}"
-        owner: 'root'
-        group: 'root'
         mode: '0644'
       become: false
 
