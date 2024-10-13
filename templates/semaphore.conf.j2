@@ -7,14 +7,14 @@
     "user": "{{ semaphore_db_user }}",
     "pass": "{{ semaphore_db_pass }}",
     "name": "{{ semaphore_db_name }}",
-    "options": {}
+    "options": {{ semaphore_db_options | to_json }}
   },
   "postgres": {
     "host": "{{ semaphore_db_host }}",
     "user": "{{ semaphore_db_user }}",
     "pass": "{{ semaphore_db_pass }}",
     "name": "{{ semaphore_db_name }}",
-    "options": {}
+    "options": {{ semaphore_db_options | to_json }}
   },
   "dialect": "{{ semaphore_db_flavor }}",
   "port": "{{ semaphore_port }}",
@@ -27,6 +27,9 @@
   "email_sender": "{{ semaphore_email_from }}",
   "email_host": "{{ semaphore_email_host }}",
   "email_port": "{{ semaphore_email_port }}",
+  "email_username": "{{ semaphore_email_username }}",
+  "email_password": "{{ semaphore_email_password }}",
+  "email_secure": {{ semaphore_email_secure | lower }},
   "web_host": "{{ semaphore_service_uri }}",
   "ldap_enable": {{ semaphore_ldap_enabled | lower }},
   "ldap_needtls": {{ semaphore_ldap_tls | lower }},
@@ -35,9 +38,32 @@
   "ldap_server": "{{ semaphore_ldap_host }}",
   "ldap_searchdn": "{{ semaphore_ldap_search }}",
   "ldap_searchfilter": "{{ semaphore_ldap_searchfilter }}",
+  "ldap_mappings": {{ semaphore_ldap_mappings | to_json }},
   "concurrency_mode": "{{ semaphore_concurrency_mode }}",
   "max_parallel_tasks": {{ semaphore_max_parallel_tasks }},
   "telegram_alert": {{ semaphore_telegram_enabled | lower }},
   "telegram_chat": "{{ semaphore_telegram_chat }}",
-  "telegram_token": "{{ semaphore_telegram_token }}"
+  "telegram_token": "{{ semaphore_telegram_token }}",
+  "slack_alert": {{ semaphore_slack_enabled | lower }},
+  "slack_url": "{{ semaphore_slack_url }}",
+  "rocketchat_alert": {{ semaphore_rocketchat_enabled | lower }},
+  "rocketchat_url": "{{ semaphore_rocketchat_url }}",
+  "microsoft_teams_alert": {{ semaphore_ms_teams_enabled | lower }},
+  "microsoft_teams_url": "{{ semaphore_ms_teams_url }}",
+  "oidc_providers": {{ semaphore_oidc_providers | default('null', true) }},
+  "max_task_duration_sec": {{ semaphore_max_task_duration }},
+  "max_tasks_per_template": {{ semaphore_max_task_per_template }},
+  "password_login_disable": {{ semaphore_password_login_disable | lower }},
+  "non_admin_can_create_project": {{ semaphore_non_admin_can_create_project | lower }},
+  "use_remote_runner": {{ semaphore_use_remote_runner | lower }},
+  "runner": {
+    "api_url": "{{ semaphore_runner_api_url }}",
+    "registration_token": "{{ semaphore_runner_registration_token }}",
+    "config_file": "{{ semaphore_runner_config_file }}",
+    "one_off": {{ semaphore_runner_one_off | lower }},
+    "webhook": "{{ semaphore_runner_webhook }}",
+    "max_parallel_tasks": {{ semaphore_runner_max_parallel_tasks }}
+  },
+  "global_integration_alias": "{{ semaphore_global_integration_alias }}",
+  "apps": {{ semaphore_apps | default('null', true) }}
 }

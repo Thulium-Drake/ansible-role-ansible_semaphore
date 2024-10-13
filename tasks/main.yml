@@ -9,7 +9,7 @@
 - name: 'Ensure Semaphore package file'
   when: semaphore_package_download
   block:
-    - name: 'Get Semaphore versionversion (1/2)'
+    - name: 'Get Semaphore version (1/2)'
       ansible.builtin.uri:
         url: 'https://api.github.com/repos/semaphoreui/semaphore/releases/latest'
         return_content: true
@@ -100,20 +100,22 @@
     enabled: true
     daemon_reload: true
 
-- name: 'Ensure Semaphore local admin user'
+- name: 'Manage local admin account'
   when: semaphore_admin_user_manage
   block:
-    - name: 'Update Semaphore local admin account'
+    - name: 'Stop service when using bolt as DB'
+      ansible.builtin.systemd:
+        name: 'semaphore'
+        state: 'stopped'
+      when: semaphore_db_flavor == 'bolt'
+
+    - name: 'Check if Semaphore local admin account exists'
       ansible.builtin.command: >
-        /usr/bin/semaphore user change-by-login
+        /usr/bin/semaphore user list
         --config /etc/semaphore/semaphore.conf
-        --login {{ semaphore_admin_user }}
-        --password {{ semaphore_admin_pass }}
-        --email {{ semaphore_admin_email }}
-        --admin
-      changed_when: true  # This always changes, this CLI basically resets the password
-      no_log: "{{ not semaphore_debug }}"
-  rescue:
+      changed_when: false  # Only lists existing users
+      register: 'semaphore_users'
+
     - name: 'Create Semaphore local admin account'
       ansible.builtin.command: >
         /usr/bin/semaphore user add
@@ -124,4 +126,23 @@
         --email {{ semaphore_admin_email }}
         --admin
       changed_when: true  # This always changes, this CLI basically resets the password
+      when: semaphore_admin_user not in semaphore_users['stdout']
       no_log: "{{ not semaphore_debug }}"
+
+    - name: 'Update Semaphore local admin account'
+      ansible.builtin.command: >
+        /usr/bin/semaphore user change-by-login
+        --config /etc/semaphore/semaphore.conf
+        --login {{ semaphore_admin_user }}
+        --password {{ semaphore_admin_pass }}
+        --email {{ semaphore_admin_email }}
+        --admin
+      changed_when: true  # This always changes, this CLI basically resets the password
+      when: semaphore_admin_user in semaphore_users['stdout']
+      no_log: "{{ not semaphore_debug }}"
+
+    - name: 'Start service when using bolt as DB'
+      ansible.builtin.systemd:
+        name: 'semaphore'
+        state: 'started'
+      when: semaphore_db_flavor == 'bolt'

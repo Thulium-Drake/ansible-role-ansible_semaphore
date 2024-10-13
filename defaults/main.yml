@@ -12,17 +12,22 @@ semaphore_access_key_encryption: 'fJRW2SjYLl1WHRv2lrKguOlFcD1cb5pLuRYamULawg0='
 
 semaphore_db_flavor: 'bolt'       # bolt, postgres or mysql
 semaphore_bolt_db: '/var/lib/semaphore/semaphore.bolt'
+
 semaphore_db_host: 'localhost'
 semaphore_db_name: 'semaphore'
 semaphore_db_user: 'semaphore'
 semaphore_db_pass: 'secure_password'
+semaphore_db_options: {}
 
 # Local admin user
 # Keep local admin user up to date (create the user and update the password)
+# NOTE: If you're using BoltDB, this will interrupt the service due to locking constraints
 semaphore_admin_user_manage: true
 semaphore_admin_user: 'admin'
 semaphore_admin_pass: 'ansible-webui'
 semaphore_admin_email: 'root@localhost'
+semaphore_non_admin_can_create_project: false
+semaphore_password_login_disable: false
 
 # WebUI settings
 semaphore_service_uri: 'http://semaphore.example.com'
@@ -33,14 +38,29 @@ semaphore_port: 3000
 semaphore_cookie_encryption: 'PQwYDTtxqv+l7qNjwKieeF3V+HzTKn5SfnWGGYDrifo='
 semaphore_cookie_hash: 'BzkGM8e4Cr+oe7/VR2iseyEI94pRL7IkmU8GJfBG8nM='
 
-semaphore_concurrency_mode: ''    # empty, 'node' or 'project'
+# Task settings
 semaphore_max_parallel_tasks: 0
+semaphore_max_task_duration: 0
+semaphore_max_task_per_template: 0
+semaphore_concurrency_mode: ''    # empty, 'node' or 'project'
+
+# Runner settings
+semaphore_use_remote_runner: false
+semaphore_runner_api_url: ''
+semaphore_runner_registration_token: ''
+semaphore_runner_config_file: ''
+semaphore_runner_one_off: false
+semaphore_runner_webhook: ''
+semaphore_runner_max_parallel_tasks: 0
 
 # Email settings
 semaphore_email_enabled: false
 semaphore_email_from: 'semaphore@exmaple.com'
 semaphore_email_host: 'localhost'
 semaphore_email_port: 25
+semaphore_email_username: ''
+semaphore_email_password: ''
+semaphore_email_secure: false
 
 # LDAP settings
 semaphore_ldap_enabled: false
@@ -50,8 +70,32 @@ semaphore_ldap_tls: false
 semaphore_ldap_password: 'ldap_password_secure_n_all'
 semaphore_ldap_search: 'ou=users'
 semaphore_ldap_searchfilter: ''
+semaphore_ldap_mappings:
+  cn: ''
+  dn: ''
+  mail: ''
+  uid: ''
 
 # Telegram settings
 semaphore_telegram_enabled: false
 semaphore_telegram_chat: 'semaphore-alerts'
 semaphore_telegram_token: ''
+
+# Slack settings
+semaphore_slack_enabled: false
+semaphore_slack_url: ''
+
+# Rocketchat settings
+semaphore_rocketchat_enabled: false
+semaphore_rocketchat_url: ''
+
+# Microsoft Teams settings
+semaphore_ms_teams_enabled: false
+semaphore_ms_teams_url: ''
+
+# OIDC settings
+semaphore_oidc_providers: ''
+
+# Misc settings
+semaphore_global_integration_alias: ''
+semaphore_apps: ''
