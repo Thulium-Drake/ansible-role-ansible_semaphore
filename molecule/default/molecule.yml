@@ -2,10 +2,10 @@
 dependency:
   name: 'galaxy'
 driver:
-  name: ${DRIVER_NAME:-docker}
+  name: ${DRIVER_NAME:-podman}
 platforms:
   - name: "semaphore"
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-debian10}-ansible:latest"
+    image: "geerlingguy/podman-${MOLECULE_DISTRO:-debian10}-ansible:latest"
     command: '/lib/systemd/systemd'
     pre_build_image: true
     volumes:
